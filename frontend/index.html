@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SentiAxaWb</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ===================== LANDING (pre-login) ===================== -->
+  <section id="landing" class="screen">
+    <canvas id="starfield"></canvas>
+
+    <header class="landing-topbar">
+      <!-- (1) Dashboard name, left side -->
+      <a class="brand" href="./" aria-label="SentiAxaWb">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text">SentiPobile<small>Compotent</small></span>
+      </a>
+
+      <!-- (3) Extra options, same line as Sign In / Sign Up -->
+      <nav class="landing-nav" aria-label="Site">
+        <a class="nav-link" data-link="research" href="docs/research-paper.html">Research</a>
+        <a class="nav-link" data-link="futureScope" href="future-scope.html">Future Scope</a>
+        <a class="nav-link" data-link="minProf" href="#">MinProf</a>
+        <a class="nav-link" data-link="workDirectory" href="#">WorkDirectory</a>
+      </nav>
+
+      <div class="topbar-actions">
+        <button class="btn btn-ghost" data-open-auth="login">Sign In</button>
+        <button class="btn btn-solid" data-open-auth="register">Sign Up</button>
+      </div>
+    </header>
+
+    <!-- (2) Centre: two small squares for your own 3D / video clips,
+         (4) then one line of text underneath. -->
+    <main class="landing-hero">
+      <div class="media-row">
+        <div class="media-slot" data-slot="left">
+          <video muted loop autoplay playsinline preload="metadata"></video>
+          <span class="media-ph">Video 1</span>
+        </div>
+        <div class="media-slot" data-slot="right">
+          <video muted loop autoplay playsinline preload="metadata"></video>
+          <span class="media-ph">Video 2</span>
+        </div>
+      </div>
+      <p class="landing-line">Turning text, emoji and screenshots into a measurable read on how people feel.
+        Manageable, shareable, and exportable. For free.</p>
+    </main>
+  </section>
+
+  <!-- ===================== AUTH MODAL ===================== -->
+  <div id="auth-overlay" class="overlay hidden">
+    <div class="auth-modal">
+      <!-- same starfield as the landing page -->
+      <canvas id="auth-stars" class="auth-stars"></canvas>
+      <div class="auth-content">
+        <button class="modal-close" id="auth-close" aria-label="Close">&times;</button>
+
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-tab="login">Sign In</button>
+          <button class="auth-tab" data-tab="register">Sign Up</button>
+        </div>
+
+        <form id="login-form" class="auth-form" novalidate>
+          <label>Email
+            <input type="text" inputmode="email" name="email" id="login-email" autocomplete="email" placeholder="name@example.com" required />
+            <span class="field-status" id="login-email-status" aria-live="polite"></span>
+          </label>
+          <label>Password
+            <input type="password" name="password" autocomplete="current-password" required />
+          </label>
+          <p class="form-error" id="login-error"></p>
+          <button type="submit" class="btn btn-solid btn-block">Sign In</button>
+        </form>
+
+        <form id="register-form" class="auth-form hidden" novalidate>
+          <label>Email
+            <input type="text" inputmode="email" name="email" id="register-email" autocomplete="email" placeholder="name@example.com" required />
+            <span class="field-status" id="register-email-status" aria-live="polite"></span>
+          </label>
+
+          <div class="pw-block">
+            <span class="pw-title">Password</span>
+            <div class="pw-modes" role="tablist" aria-label="Password choice">
+              <button type="button" class="pw-mode active" data-pw-mode="own" role="tab" aria-selected="true">Enter my own</button>
+              <button type="button" class="pw-mode" data-pw-mode="suggest" role="tab" aria-selected="false">Suggest one</button>
+            </div>
+
+            <div id="pw-own">
+              <input type="password" name="password" id="register-password" minlength="8" autocomplete="new-password" placeholder="At least 8 characters" />
+            </div>
+
+            <div id="pw-suggest" class="hidden">
+              <div class="pw-suggest-row">
+                <input type="text" id="suggested-password" readonly aria-label="Suggested password" />
+                <button type="button" class="icon-btn pw-btn" id="pw-regen" title="Generate another" aria-label="Generate another">&#8635;</button>
+                <button type="button" class="icon-btn pw-btn" id="pw-copy" title="Copy" aria-label="Copy password">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9" stroke-linecap="round"/></svg>
+                </button>
+              </div>
+              <p class="form-hint">Copy it now — you will need it to sign in.</p>
+            </div>
+          </div>
+
+          <p class="form-error" id="register-error"></p>
+          <button type="submit" class="btn btn-solid btn-block">Create account</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== CHAT DASHBOARD (post-login) ===================== -->
+  <section id="dashboard" class="screen hidden">
+    <header class="chat-topbar">
+      <button id="sidebar-toggle" class="icon-btn" aria-label="Open menu">|||</button>
+      <span class="chat-title">Sentiment</span>
+      <span class="chat-title-spacer"></span>
+
+      <!-- (4) Share + Download, right side -->
+      <div class="topbar-tools">
+        <button id="share-btn" class="tool-btn" title="Share this chat">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+          <span>Share</span>
+        </button>
+        <button id="download-btn" class="tool-btn" title="Download this chat as .md">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+          <span>Download</span>
+        </button>
+      </div>
+    </header>
+
+    <main id="chat-log" class="chat-log" aria-live="polite"></main>
+
+    <footer class="composer">
+      <div class="composer-box">
+        <!-- attachment preview (hidden until a file is picked) -->
+        <div id="attachment" class="attachment hidden">
+          <img id="attachment-thumb" class="attachment-thumb hidden" alt="" />
+          <span id="attachment-icon" class="attachment-icon hidden">&#9654;</span>
+          <span class="attachment-meta">
+            <span id="attachment-name" class="attachment-name"></span>
+            <span id="attachment-size" class="attachment-size"></span>
+          </span>
+          <button id="attachment-remove" class="attachment-remove" aria-label="Remove attachment">&times;</button>
+        </div>
+
+        <div class="composer-inner">
+          <!-- (2) "+" : upload a photo or short video -->
+          <button id="attach-btn" class="plus-btn" aria-label="Add a photo or short video" title="Add a photo or short video">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+          <input id="file-input" type="file" class="hidden"
+                 accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime" />
+          <textarea id="composer-input" placeholder="Message Sentiment…" rows="1"></textarea>
+          <button id="composer-send" class="send-btn" aria-label="Send">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 12h15M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <p class="composer-hint">Enter to send · Shift+Enter for a new line · multiple lines = batch</p>
+    </footer>
+  </section>
+
+  <!-- ===================== WELCOME ALERT DIALOG ===================== -->
+  <div id="welcome-overlay" class="overlay hidden">
+    <div class="alert-dialog" role="alertdialog" aria-modal="true"
+         aria-labelledby="wd-title" aria-describedby="wd-desc">
+      <button class="modal-close" id="wd-close" aria-label="Close">&times;</button>
+      <h2 id="wd-title">Quick question</h2>
+      <p id="wd-desc">What are you here to analyse today?</p>
+
+      <!-- radio group: exactly one option can be selected at a time -->
+      <div class="radio-group" role="radiogroup" aria-labelledby="wd-desc">
+        <label class="radio-opt"><input type="radio" name="welcome-q" value="reviews" /><span class="radio-ui"></span><span>Customer reviews</span></label>
+        <label class="radio-opt"><input type="radio" name="welcome-q" value="social" /><span class="radio-ui"></span><span>Social media posts</span></label>
+        <label class="radio-opt"><input type="radio" name="welcome-q" value="messages" /><span class="radio-ui"></span><span>Chat or support messages</span></label>
+        <label class="radio-opt"><input type="radio" name="welcome-q" value="exploring" /><span class="radio-ui"></span><span>Just exploring</span></label>
+      </div>
+
+      <div class="dialog-actions">
+        <button class="btn btn-ghost" id="wd-skip">Skip</button>
+        <button class="btn btn-solid" id="wd-continue" disabled>Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <div id="sidebar-overlay" class="overlay hidden">
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <div class="avatar" id="sidebar-avatar">?</div>
+        <div class="sidebar-who">
+          <div class="sidebar-username" id="sidebar-username">—</div>
+          <div class="sidebar-sub">Signed in</div>
+        </div>
+        <button class="modal-close" id="sidebar-close" aria-label="Close">&times;</button>
+      </div>
+
+      <button id="new-chat-btn" class="btn btn-solid btn-block">+ New chat</button>
+
+      <div class="sidebar-section sidebar-chats">
+        <h3>Recent chats</h3>
+        <div id="chat-list" class="chat-list"></div>
+      </div>
+
+      <div class="sidebar-section">
+        <!-- (3) replaces the old "MCP Connector" slot; opens an empty page -->
+        <a id="mcp-link" class="sidebar-link" href="mcp.html" target="_blank" rel="noopener">MCP</a>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>Data</h3>
+        <button id="delete-data-btn" class="btn btn-danger btn-block">Delete my data</button>
+        <p class="sidebar-note">Removes your submission history and share links. Your account stays.</p>
+      </div>
+
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn btn-ghost btn-block">Log out</button>
+      </div>
+    </aside>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Chart.js (pie chart rendering) — served locally, no CDN dependency,
+       so it works on networks that block cdnjs.cloudflare.com. -->
+  <script src="js/chart.umd.js"></script>
+
+  <script src="js/config.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/starfield.js"></script>
+  <script src="js/landing.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/chat.js"></script>
+  <script src="js/welcome.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

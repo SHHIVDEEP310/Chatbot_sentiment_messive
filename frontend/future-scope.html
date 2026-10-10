@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Future Scope — Sentiment</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="page">
+<div class="page-wrap">
+  <div class="page-top">
+    <a class="brand" href="./"><span class="brand-mark"></span><span class="brand-text">Sentiment<small>Analysis Dashboard</small></span></a>
+    <a class="page-back" href="./">&larr; Back to dashboard</a>
+  </div>
+
+  <h1>Future Scope</h1>
+  <p class="lead">What this project does today, how it is built, and where it can go next.</p>
+
+  <h2>The project in one paragraph</h2>
+  <p>Sentiment is a full-stack web application that reads text and emoji and tells you whether the feeling behind it is positive, negative or neutral &mdash; with the probability of each class shown as a pie chart. A fine-tuned HuggingFace sequence-classification checkpoint does the prediction; a Python FastAPI backend serves it, and a static, build-free frontend provides the chat-style interface.</p>
+
+  <h2>How a request flows</h2>
+  <div class="flow">
+    <span>Text / emoji</span><i>&rarr;</i><span>FastAPI</span><i>&rarr;</i><span>Sentiment model</span><i>&rarr;</i><span>Scores &amp; insight</span><i>&rarr;</i><span>Pie chart</span>
+  </div>
+  <div class="flow" style="margin-top:12px">
+    <span>Photo / short video</span><i>&rarr;</i><span>Extract text (OCR)</span><i>&rarr;</i><span>Sentiment model</span><i>&rarr;</i><span>Pie chart</span>
+  </div>
+
+  <h2>Available today</h2>
+  <div class="card-grid">
+    <div class="info-card"><span class="tag live">Live</span><h3>Text &amp; emoji sentiment</h3><p>Single messages or multi-line batches, each analysed on its own. Labels come from the checkpoint itself, nothing is hard-coded.</p></div>
+    <div class="info-card"><span class="tag live">Live</span><h3>Probability pie chart</h3><p>Every result shows how the probability is split across the classes, plus a short rule-based insight.</p></div>
+    <div class="info-card"><span class="tag live">Live</span><h3>Photo &amp; short video input</h3><p>The server extracts on-screen text from a photo or a few sampled video frames, then runs the same model on it.</p></div>
+    <div class="info-card"><span class="tag live">Live</span><h3>Accounts &amp; stored chats</h3><p>Email sign-in with hashed passwords and an HTTP-only session cookie. Every visit opens a fresh chat; earlier chats stay stored.</p></div>
+    <div class="info-card"><span class="tag live">Live</span><h3>Share &amp; download</h3><p>Share a read-only link to a chat, or download it as a Markdown (.md) file.</p></div>
+    <div class="info-card"><span class="tag live">Live</span><h3>Data control</h3><p>"Delete my data" removes your history and share links while keeping your account.</p></div>
+  </div>
+
+  <h2>Technology</h2>
+  <ul>
+    <li><b style="color:var(--text)">Model:</b> HuggingFace Transformers + PyTorch, loaded once at server start.</li>
+    <li><b style="color:var(--text)">Backend:</b> Python, FastAPI, SQLAlchemy (SQLite for local use, Postgres-ready), JWT session cookie, bcrypt.</li>
+    <li><b style="color:var(--text)">Media:</b> Tesseract OCR with OpenCV frame sampling for video.</li>
+    <li><b style="color:var(--text)">Frontend:</b> plain HTML, CSS and JavaScript with Chart.js &mdash; no build step.</li>
+    <li><b style="color:var(--text)">Deployment:</b> backend as a Docker container; frontend on Vercel with an <code>/api</code> rewrite so the session cookie stays first-party.</li>
+  </ul>
+
+  <h2>Where it can go next</h2>
+  <p>These are directions for future work, not features that exist today.</p>
+  <div class="card-grid">
+    <div class="info-card"><span class="tag next">Next</span><h3>MCP server</h3><p>Expose the model as an MCP tool so other AI assistants can call the sentiment analysis directly.</p></div>
+    <div class="info-card"><span class="tag next">Next</span><h3>Research paper</h3><p>Document the model, the data and the evaluation in a written paper linked from the home page.</p></div>
+    <div class="info-card"><span class="tag next">Next</span><h3>Speech &amp; scene understanding</h3><p>Transcribe a video's audio and use an image-captioning model, so photos and clips without visible text can be analysed too.</p></div>
+    <div class="info-card"><span class="tag next">Next</span><h3>More languages</h3><p>Multilingual models and OCR language packs for non-English text and emoji usage.</p></div>
+    <div class="info-card"><span class="tag next">Next</span><h3>Aspect-level sentiment</h3><p>Break a long review into topics (price, support, quality) and score each one separately.</p></div>
+    <div class="info-card"><span class="tag next">Next</span><h3>Explainability</h3><p>Highlight the words and emoji that pushed the prediction toward a class.</p></div>
+    <div class="info-card"><span class="tag next">Next</span><h3>Trends &amp; reports</h3><p>Sentiment over time across a user's chats, with exportable reports.</p></div>
+    <div class="info-card"><span class="tag next">Next</span><h3>MLOps</h3><p>Automated tests and deployment, experiment tracking, and monitoring for model drift in production.</p></div>
+    <div class="info-card"><span class="tag next">Next</span><h3>Public API</h3><p>API keys and rate limits so other applications can integrate the service safely.</p></div>
+  </div>
+
+  <p class="page-note">Edit this page freely &mdash; it is plain HTML in <code>frontend/future-scope.html</code>.</p>
+</div>
+</body>
+</html>

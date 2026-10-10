@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<meta name="robots" content="noindex" />
+<title>Shared chat — Sentiment</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="page">
+<div class="page-wrap">
+  <div class="page-top">
+    <a class="brand" href="./"><span class="brand-mark"></span><span class="brand-text">Sentiment<small>Analysis Dashboard</small></span></a>
+    <a class="page-back" href="./">Open Sentiment &rarr;</a>
+  </div>
+  <h1 id="shared-title">Shared chat</h1>
+  <p class="lead" id="shared-sub">Read-only view.</p>
+  <div id="shared-log" class="shared-log"></div>
+</div>
+<div id="toast" class="toast" role="status"></div>
+
+<script src="js/chart.umd.js"></script>
+<script src="js/config.js"></script>
+<script src="js/toast.js"></script>
+<script src="js/api.js"></script>
+<script src="js/render.js"></script>
+<script>
+(async function () {
+  const title = document.getElementById("shared-title");
+  const sub = document.getElementById("shared-sub");
+  const log = document.getElementById("shared-log");
+  const token = new URLSearchParams(location.search).get("t");
+  if (!token) { title.textContent = "Link not valid"; sub.textContent = "This share link is incomplete."; return; }
+  try {
+    const data = await Api.shared(token);
+    title.textContent = data.title;       // textContent: never HTML
+    sub.textContent = "Shared chat · read-only";
+    document.title = data.title + " — Sentiment";
+    Render.items(log, data.items);
+  } catch (err) {
+    title.textContent = "Chat not found";
+    sub.textContent = err.status === 404 ? "This link doesn't exist or was removed." : (err.message || "Could not load this chat.");
+  }
+})();
+</script>
+</body>
+</html>
